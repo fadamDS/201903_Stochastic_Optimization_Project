@@ -12,7 +12,8 @@
 \setstretch{1.5}
 \usepackage{multirow}
 %\DeclareMathSizes{12}{14}{10}{10}
-\usepackage[margin=2.5cm]{geometry}    % How to set margins - optimized for 2.5cm      
+\usepackage[margin=2.5cm]{geometry}    % How to set margins - optimized for 2.5cm     
+\usepackage{pdfpages} 
 
 % See geometry.pdf to learn the layout options. There are lots.
 \geometry{a4paper}                   			% ... or a4paper or a5paper or ... 
@@ -95,7 +96,7 @@
 \author[Add1]{Julia Barnett}
 \ead{julia.barnett@barcelonagse.eu}
 
-\author[Add1]{Oscar Martínez}
+\author[Add1]{Oscar Mart\'inez}
 \ead{oscar.martinez@barcelonagse.eu}
 
 \author[Add1]{Guillem Sitges}
@@ -128,25 +129,25 @@ This project aims to investigate...
 
 \section{Introduction}
 
-The hot hand fallacy  is a well known issue in sport analytics and human perception. First discussed by \cite{gilovich1985hot}, it describes the misconception that players tend to have higher chances of scoring points if they have scored in in the previous shot. However, a look at sports media reveals, that the concept of being "hot" is still in use today. We try to approach the concept of "hotness" from a different angle, by looking at overall game performance, not single outcomes such as shots made. We assume that a player performance in each NBA game infact depends on an underlying hidden state such as "hot" or "cold". Using game-level data for the 2017-18 and 2018-19 NBA seasons, we fit a Hidden Markov Model to uncover these states. Our results closely align with common conceptions about current players in the NBA. Superstars such as James Harden and Lebron James tend to stay "hot" and even when they are "cold" have above average games. The average player however tends to only have an average game when he's hot. While our results shouldn't be interpreted as a proof for "hotness", they can be used as a tool for scouting reports or management decisions since they jointly describe a players performance and their consistency. 
+The hot hand fallacy  is a well known issue in sports analytics and human perception. First discussed by \cite{gilovich1985hot}, it describes the misconception that players tend to have higher chances of scoring points if they have scored in the previous shot. However, a look at sports media reveals that the concept of being ``hot" is still in use today. We try to approach the concept of ``hotness" from a different angle; we look at overall game performance rather than single outcomes such as shots made. We assume that a player's performance in each NBA game in fact depends on an underlying hidden state such as ``hot" or ``cold". Using game-level data for the 2017-18 and 2018-19 NBA seasons, we fit a Hidden Markov Model to uncover these states. Our results closely align with common conceptions about current players in the NBA. Superstars such as James Harden and Lebron James tend to stay ``hot", and even when ``cold" they have above-average games. The average player, however, tends to only have an average game when he is hot. While our results should not be interpreted as a proof for ``hotness", they can be used as a tool for scouting reports or management decisions because they jointly describe a player's performance and consistency. 
 
 \section{Data and Features}
 
-Our analysis is based on player level data for each game in the 2017-18 and 2018-19 NBA seasons. We have obtained the data from www.basketball-reference.com using web-scraping methods. The data of interest to us was specifically taken from the game logs of players during the 2017-18 season and the 2018-19 season. There are 82 games in a season, so with data on 497 players we have a total of 26,003 observations in the first data set (2017-18 season) and 387 players and 20,228 observations in the second data set (2018-2019 season, which has yet to finish). The data included information for each player and each game they played on seconds played, their shot percentages, rebounds, assists, steals, blocks, turnovers, points, the overall game score and their plus minus score. Overall distributions for these statistics can be found in \ref{overall_dist}.
+Our analysis is based on player-level data for each game in the 2017-18 and 2018-19 NBA seasons. We have obtained the data from www.basketball-reference.com using web-scraping methods. The data of interest to us was specifically taken from the game logs of players during the 2017-18 season and the 2018-19 season. There are 82 games in a season, so with data on 497 players we have a total of 26,003 observations in the first data set (2017-18 season) and 387 players and 20,228 observations in the second data set (2018-2019 season, which has yet to finish).The data included information for every player and each game played; some statistics reported include seconds played, shot percentages, rebounds, assists, steals, blocks, turnovers, points, the overall game score, and their plus minus score. Overall distributions for these statistics can be found in \ref{overall_dist}.
 
-Instead of focusing on a single outcome measure, we created a "Game Value Index" ($GV$) using a combination of these statistics. This simplified the analysis, given that the different statistics have different distributions. Further, it can be used to obtain an overall view of a players impact in a game. The metric is derived by combining the most important positive individual statistics (field goal percentage, three-point percentage, free throw percentage, total rebounds, steals, assists, blocks, and total points), subtracting the negative one (turnovers), and finally dividing by the seconds played per game to standardize the metric per game (see \ref{game_value_dist} for overall distributions).
+Instead of focusing on a single outcome measure, we created a ``Game Value Index" ($GV$) using a combination of these statistics. This simplified the analysis given that the different statistics have different distributions. Further, it can be used to obtain an overall view of a player's impact in a game. The metric is derived by combining the most important positive individual statistics (field goal percentage, three-point percentage, free throw percentage, total rebounds, steals, assists, blocks, and total points), subtracting the negative one (turnovers), and finally dividing by the seconds played per game to standardize the metric per game (see \ref{game_value_dist} for overall distributions).
 
 \begin{align*}
 GV = \frac{\text{\%FG + \%3PT + \%FT + Rebound + Steal + Assist +  Block + Points - Turnovers}}{\text{Seconds Played}}
 \end{align*} 
 
-To further simplify the analysis, we created a discrete variable called "Game Quality" from the Game Value Index. A player had a good game if his Game Value Index was above the 70th percentile of all games, a bad game if his outcome was below the 30th percentile and an average game between these two. We then used this Game Quality measure as our observation in the context of a Hidden Markov Model.
+To further simplify the analysis, we created a discrete variable called ``Game Quality" from the Game Value Index. A player had a good game if his Game Value Index was above the $70^{th}$ percentile of all games, a bad game if his outcome was below the $30^{th}$ percentile and an average game between these two. We then used this Game Quality measure as our observation in the context of a Hidden Markov Model.
 
 \section{Analysis}
 
 \subsection{Model}
 
-As described, we assumed that a players performance can be described by a Hidden Markov Model with the following structure:
+As described, we assumed that a player's performance can be described by a Hidden Markov Model with the following structure:
 
 \begin{center}
 
@@ -219,34 +220,34 @@ As described, we assumed that a players performance can be described by a Hidden
 
 \end{center}
 
-In which we only observe the outcomes $y_t$. The primitives are defined in the following:
+In which we only observe the outcomes $y_t$. The primitives are defined as follows:
 
 \begin{itemize}
 	\item $x_t \in [\text{Cold, Hot}]$, the hidden state
-	\item $y_t \in [\text{Bad, Avergae, Good}]$ , the observed outcome as described in the previous section
-	\item $b_{ij} = P(Y = j | X = i)$, emission probability of observing a game outcome conditioned on being hot or cold
-	\item $a_{ij} = P(X_{t+1} = j | X_t =i)$, transition probability of changing from a given state to another between periods
-	\item $\pi_i$: Initial probabilities of transitioning to a hidden state (priors).
+	\item $y_t \in [\text{Bad, Average, Good}]$, the observed outcomes as described in the previous section
+	\item $b_{ij} = P(Y = j | X = i)$, the emission probabilities of observing a game outcome conditioned on being hot or cold
+	\item $a_{ij} = P(X_{t+1} = j | X_t =i)$, the transition probabilities of changing from a given state to another (or staying at the same state) between periods
+	\item $\pi_i$: the initial probabilities of transitioning to a hidden state (priors)
 \end{itemize}
 
-The most important model assumption is that the state $x_t$ only depends on the previous state $x_{t-1}$ and is conditonally independent from all other previous states. In the Basketball context, this means that the probability of being hot or cold in the current game, only depends on the previous game. We acknowledge that this is a quite strong assumption, particularly given the research on the hot hand fallacy. However, even though we can't assume any predictive power of our model, we argue that it helps to uncover overall player quality. This is further supported by the consistency of our results over the two observed seasons as shown in section \ref{results}.
+The most important model assumption is that the state $x_t$ only depends on the previous state $x_{t-1}$ and is conditionally independent of all other previous states. In the basketball context, this means that the probability of being hot or cold in the current game only depends on the previous game. We acknowledge that this is quite a strong assumption, particularly given the research on the hot hand fallacy. However, even though we cannot assume any predictive power of our model, we argue that it helps to uncover overall player quality. This is further supported by the consistency of our results over the two observed seasons as shown in section \ref{results}.
 
 \subsubsection{Fitting the Model}
 
-Our main interest lies in the transition and emission probabilities for each player, as a measure of consistency and overall performance. We use the Baum-Welch algorithm to uncover these as the parameters of the Hidden Markov Model. The algorithm makes use of dynamics programming and an Expectation-Maximizatin procedure to fit the model to a given data set. We follow \cite{rabiner1989tutorial} for the derivation of the algorithm.
+Our main interest lies in the transition and emission probabilities for each player as a measure of consistency and overall performance. We use the Baum-Welch algorithm to uncover these as the parameters of the Hidden Markov Model. The algorithm makes use of dynamic programming and an Expectation-Maximization procedure to fit the model to a given data set. We follow \cite{rabiner1989tutorial} for the derivation of the algorithm.
 
 The parameters to be estimated are those of the HMM: 
 \begin{itemize}
 	\item \textbf{Transition matrix}: denoted by $A=\left\{a_{i j}\right\}=P\left(X_{t}=j | X_{t-1}=i\right)$
-	\item \textbf{Emission matrix}: denoted by $b_{j}\left(y_{i}\right)=P\left(Y_{t}=y_{i} | X_{t}=j\right)$ and $B$ the collection of $b_{j}$. Generally, a distribution is assumed and this matrix contains the different parameters for each state of the assumed distribution. 
+	\item \textbf{Emission matrix}: denoted by $b_{j}\left(y_{i}\right)=P\left(Y_{t}=y_{i} | X_{t}=j\right)$ and $B$ the collection of $b_{j}$. Generally, a distribution is assumed and this matrix contains the different parameters for each state of the assumed distribution
 	\item \textbf{Initial parameters/Priors}: denoted by $\pi_{i}=P\left(X_{1}=i\right)$
 \end{itemize}
 
-Given a sequence of observations $Y = {y_{1},...,y_{T}}$, the algorithm will find the parameters $ A, B$ and $\pi$ that maximize the probability of the observed sequence. We will now describe the algorithm in detail, following the steps described by \cite{rabiner1989tutorial}
+Given a sequence of observations $Y = {y_{1},...,y_{T}}$, the algorithm will find the parameters $ A, B$ and $\pi$ that maximize the probability of the observed sequence. We will now describe the algorithm in detail, following the steps described by \cite{rabiner1989tutorial}.
 
 \subsubsection{Forward step}
 
-In the forward step we compute the probablity to observing the sequence $Y$ and being a given state $x$ at time $t$, given the parameters $\theta$ as $\alpha_{i}(t)=P\left(Y_{1}=y_{1}, \ldots, Y_{t}=y_{t}, X_{t}=i |\theta \right)$ This step is computed from the first period to the last one. It is initialized in period one using the priors and the emission probabilities $b$:
+In the forward step we compute the probability of observing the sequence $Y$ and being in a state $x$ at time $t$, given the parameters $\theta$ as $\alpha_{i}(t)=P\left(Y_{1}=y_{1}, \ldots, Y_{t}=y_{t}, X_{t}=i |\theta \right)$. This step is computed from the first period to the last. It is initialized in period one using the priors and the emission probabilities $b$:
 
 $$  \alpha_{i}(1)=\pi_{i} b_{i}\left(y_{1}\right) $$
 
@@ -255,14 +256,14 @@ $$  \alpha_{i}(t+1)=b_{i}\left(y_{t+1}\right) \sum_{j=1}^{S} \alpha_{j}(t) a_{j 
 
 \subsubsection{Backward Step}
 
-In the backward step, the probabilities of observing the remaining sequence given an assumed state $x$ in time $t$ are computed as $\beta_{i}(t)=P\left(Y_{t+1}=y_{t+1}, \ldots, Y_{T}=y_{T} | X_{t}=i, params\right)$. This step is computed from the last period to the first one. The last period is initialized as $\beta_{i}(T)=1$.
+In the backward step, the probabilities of observing the remaining sequence given an assumed state $x$ in time $t$ are computed as $\beta_{i}(t)=P\left(Y_{t+1}=y_{t+1}, \ldots, Y_{T}=y_{T} | X_{t}=i, params\right)$. This step is computed from the last period to the first. The last period is initialized as $\beta_{i}(T)=1$.
 
-Then using induction, each previous step will be computed as 
+Then, using induction, each previous step will be computed as: 
 $$ 
 \beta_{i}(t)=\sum_{j=1}^{S} \beta_{j}(t+1) a_{i j} b_{j}\left(y_{t+1}\right)
 $$
 
-Both the backward and forward step make use of dynamic programming, by storing previous results for subsequent calculations. Using the forward and backward step, we don't need to compute all possible probablities for all sequences at each step, reducing computational complexity dramatically.
+Both the backward and forward step make use of dynamic programming by storing previous results for subsequent calculations. Using the forward and backward step, we do not need to compute all possible probabilities for all sequences at each step which dramatically reduces computational complexity.
 
 \subsubsection{Updates}
 Once the Forward and Backward step are computed, we can proceed to compute the temporary variables $\gamma$ and $\xi$ that will be used to update the parameters. This is the estimation step.
@@ -272,7 +273,7 @@ $\gamma_i(t)$ describes the probability of being in state $i$ at time $t$ given 
  \gamma_{i}(t)=P\left(X_{t}=i | Y, \theta\right)=\frac{P\left(X_{t}=i, Y | \theta \right)}{P(Y | \theta)}=\frac{\alpha_{i}(t) \beta_{i}(t)}{\sum_{j=1}^{N} \alpha_{j}(t) \beta_{j}(t)}
  $$
  
-$\xi$ is used to compute the probability of transitioning from a state $i$ to another state $j$ at a given point in time. It computes the joint probability of observing the sequence and a defined transition and normalizes it by the probability of observing the sequence.
+$\xi$ is used to compute the probability of transitioning from a state $i$ to another state $j$ at a given point in time. It computes the joint probability of observing the sequence and a defined transition, and also normalizes it by the probability of observing the sequence.
  
 \begin{align*}
  \xi_{i j}(t) =P\left(X_{t}=i, X_{t+1}=j | Y, \theta \right) &=\frac{P\left(X_{t}=i, X_{t+1}=j, Y | \theta\right)}{P(Y | \theta)} \\
@@ -295,37 +296,37 @@ Having calculated $\gamma$ and $\xi$, we can update $\theta = (A,B,\pi)$ in the 
  	\item Priors: given by the first parameter of the $\gamma$ sequence $\pi_{i}=\gamma_{i}(1)$
 \end{itemize}
 
-These steps are repeated iteratively. In our case we've used a fixed number of iterations. Generally, the algorithm is guaranteed to find a better set of parameters $\theta$ at each step $k$ Generally, maximum likelihood or parameters estimated has a small change in the last iteration. It is guaranteed that, at each step, the $P(Y|\theta_{k+1})>P(Y|\theta_{k})$. However, the algorithm might converge to a local maximum, so it is best practice to initialize the algorithm with new starting parameters and repeat the estimation (\cite{rabiner1989tutorial}). Then, the results can be averaged to obtain the final parameters. 
+These steps are repeated iteratively. In our case we have used a fixed number of iterations. Generally, the algorithm is guaranteed to find a better set of parameters $\theta$ at each step $k$. It is guaranteed that at each step $P(Y|\theta_{k+1})>P(Y|\theta_{k})$. However, the algorithm might converge to a local maximum, so it is best practice to initialize the algorithm with new starting parameters and repeat the estimation (\cite{rabiner1989tutorial}). Then, the results can be averaged to obtain the final parameters. The implementation of the algorithm can be found in \ref{algo}
 
 \newpage
 
 \section{Results}\label{results}
 
-We run the algorithm for each player and season, to obtain the emission and transition parameters. For each player, we use the same priors to initialize the algorithm. The maximum number of iterations is set to 50.  First, we present the overall parameter distributions.
+We run the algorithm for each player and season to obtain the emission and transition parameters. For each player, we use the same priors to initialize the algorithm. The maximum number of iterations is set to 50.  First, we present the overall parameter distributions.
 
 \subsection{Transmission and Emission Probabilities}
 
 \includegraphics[scale=0.4]{2distoftransition_probs_perseason}
 
-First we note, that the distributions are complements, given that we only included the two hiddens states. Looking at the top row, we see that it's actually quite unlikely for players to stay cold. As shown in the top right plot, most players have a high probability of transitioning from cold to hot. However, we also see that not many players have a high probability of staying hot, as shown in the bottom right plot. This makes sense given the many players in the NBA yet the select few that are identified as “superstars”. These consistent players are on the right tail of the Hot$\rightarrow$Hot plot (bottom right); this zone of outstanding players seems to be even rarer than the “awful” players who seem to fall in the Cold$\rightarrow$Cold zone for a large proportion of the time. A key takeaway is that what makes a good player is the high probability of staying in this hot zone, not just the ability to recover from a cold game.
+First we note that the distributions are complements, which is given due to the fact that we only included the two hidden states. Looking at the top row, we see that it is actually quite unlikely for players to stay cold. As shown in the top right plot, most players have a high probability of transitioning from cold to hot. However, we also see that not many players have a high probability of staying hot, as shown in the bottom right plot. This makes sense given the many players in the NBA yet the select few that are identified as “superstars”. These consistent players are on the right tail of the Hot$\rightarrow$Hot plot (bottom right); this zone of outstanding players seems to be even rarer than the “awful” players who seem to fall in the Cold$\rightarrow$Cold zone for a large proportion of the time. A key takeaway is that what makes a good player is the high probability of staying in this hot zone, not just the ability to recover from a cold game.
 
 Obviously, the transition probabilities alone are not conclusive; it is important that when the player is hot, he also has a good game. In order to better understand this we need to also analyze the emission data. 
 
-\includegraphics[scale=0.4]{2dist_of_emission_probs_perseason}
+\includegraphics[scale=0.35]{emission_probs}
 
-We can see that for most players in the cold zone, it is almost impossible to have a good game (blue lines), and having a bad game is the most likely even though some players have average games while cold. Contrarily, when a player is hot, it is unlikely they will have a bad game. Interestingly, the emission probabilitie of having an average game when hot are on average higher than the probability for having a good game. We can therefore conclude, that average players tend to have average games when hot. This leads us to the observation that superstars are the players who almost certainly perform good when hot, and still perform average or even good when cold.
+We can see that for most players in the cold zone, it is almost impossible to have a good game (blue lines), and having a bad game is the most likely event although some players have average games while cold. Contrarily, when a player is hot, it is unlikely they will have a bad game. Interestingly, the emission probabilities of having an average game when hot are on average higher than the probability of having a good game. We can therefore conclude that average players tend to have average games when hot. This leads us to the observation that superstars are the players who almost certainly perform good while hot, and still perform average or even good while cold.
 
 For both emission and transition probabilities, we see almost no changes in distribution. This supports the underlying model assumptions. If the model would just fit noise, we'd expect the distributions to differ over seasons. 
 
 \subsection{Top Players}
 
-We now use our results to identify the top performers of the 2017-18 season. These are players with a low probability of staying cold, a high probability of staying hot, have a high probability of having a great game even when they are cold, and even further are almost certain to have a good game when hot. The results are summarised in \ref{top_players}
+We now use our results to identify the top performers of the 2017-18 season. These are players that have a low probability of staying cold, a high probability of staying hot, a high probability of having a great game even while cold, and even further are almost certain to have a good game while hot. The results are summarized in \ref{top_players}.
 
-The majority of these players seem very intuitively right. Our algorithm consistently identifies the superstars of the NBA. Players who rarely have a bad game and stay hot with much higher probabilities than average. Interestingly, even these players stay in the hot zone with a probability less than 0.65, so this might not be a defining characteristic of a good player. Instead, what seems more important is that even if the player is not in a Hot zone, they are still outperforming the other players (who could very well be hot). Additionally, once these players are hot they are certain to dominate the court; even when they are cold, Lebron, Davis, Embiid, and Harden will have a good game with probability greater than 0.8.
+The majority of these players seem very intuitively correctly identified; our algorithm consistently identifies the superstars of the NBA. These are the players who rarely have a bad game and stay hot with much higher probabilities than average. Interestingly, even these superstars stay in the hot zone with a probability less than 0.65, so this might not be a defining characteristic of a good player. Instead, what seems more important is that even if the player is not in a hot zone, they are still outperforming the other players (who could very well be hot). Additionally, once these players are hot they are certain to dominate the court; even when they are cold, Lebron, Davis, Embiid, and Harden will have a good game with probability greater than 0.8.
  
-Further we can look into changes between the two seasons: players who dropped out or are rising stars in 2018-2019 (see \ref{top_players}). Unsurprisingly, Giannis is a rising star during this season. Cousins and Whiteside fell out of the leaderboard, but the rest of our stars maintained their positions with dignity.
+Further we can look into changes between the two seasons: players who dropped out or are rising stars in 2018-19 (see \ref{top_players}). Unsurprisingly, Giannis is a rising star during this season. Cousins and Whiteside fell out of the leaderboard, but the rest of our stars maintained their positions with dignity.
 
-The consistency of our results on a player basis further support the use of a Markov type model.
+The consistency of our results on a player basis further supports the use of a HMM.
 
 \subsection{Bad Players}
 
@@ -335,7 +336,7 @@ Finally, we can look at the apologetically dreadful players (\ref{bad_players}).
 
 \subsection{Extensions}
 
-Ultimately, even though our model results seem to be consistent over seasons, the next step would be to perform model diagnostics such as testing for Markov properties. Further,  our analysis relies on the use of the discrete Game Quality observation. Subsequent analysis could use different outcome measures to describe the joint distributions of statistics such as shots made and assists. 
+Ultimately, even though our model results seem to be consistent over seasons, the next step would be to perform model diagnostics such as testing for Markov properties. Further,  our analysis relies on the use of the discrete Game Quality observation. Subsequent analyses could use different outcome measures to describe the joint distributions of statistics such as shots made and assists. 
 
 \subsection{Potential Use Cases}
 
@@ -369,6 +370,8 @@ We have fit a Hidden Markov Model on player level data for the NBA seasons 2017-
 \section{Game Value Index} \label{game_value_dist}
 \includegraphics[scale=0.3]{gamevalueIndex}\\
 
+\section{Algorithm in Python} \label{algo}
+\includepdf[pages=-]{BaumWelch.pdf}
 \section{Top Players}\label{top_players}
 
 \begin{tabular}{ |p{3cm}||p{2cm}|p{2cm}|p{2cm}|p{2cm}|  }
@@ -395,7 +398,7 @@ We have fit a Hidden Markov Model on player level data for the NBA seasons 2017-
 	\hline
 	Player Name &Bad Cold& Average Cold&	Good Cold&	Bad Hot&	Average Hot&	Good Hot\\
 	\hline
-	Karl-Anthony Towns&   0.04&	0.455&	0.505&	0&	0.065&	0.935\\
+	Karl-Anthony Towns&   0.040&	0.455&	0.505&	0&	0.065&	0.935\\
 	Anthony Davis&   0&	0.131&	0.869&	0&	0.115&	0.885\\
 	LeBron James &0&	0.117&	0.883&	0&	0.107&	0.893\\
 	Hassan Whiteside    &0.062&	0.354&	0.584&	0&	0.061&	0.939\\
@@ -417,7 +420,7 @@ We have fit a Hidden Markov Model on player level data for the NBA seasons 2017-
 	Anthony Davis&   0.129&	0.871&	0.359&	0.641\\
 	LeBron James &0.137&	0.863&	0.341&	0.659\\
 	Joel Embiid&   0.143&	0.857&	0.356&	0.644\\
-	Russell Westbrook& 0.146&	0.854&	0.347&	0.654\\
+	Russell Westbrook& 0.146&	0.854&	0.346&	0.654\\
 	Kevin Durant&   0.060&	0.940&	0.440&	0.560\\
 	Stephen Curry& 0.000&	1.000&	0.499&	0.501\\
 	James Harden&  0.011&	0.989&	0.459&	0.541\\
@@ -430,11 +433,11 @@ We have fit a Hidden Markov Model on player level data for the NBA seasons 2017-
 	\hline
 	Player Name &Bad Cold& Average Cold&	Good Cold&	Bad Hot&	Average Hot&	Good Hot\\
 	\hline
-	Giannis Antetokounmpo&   0&	0.124&	0.876&	0&	0.065&	0.935\\
-	Anthony Davis&   0.06&	0.078&	0.861&	0&	0.014&	0.986\\
-	LeBron James &0&	0.082&	0.918&	0&	0.071&	0.929\\
-	Joel Embiid& 0& 0.171&	0.829&	0&	0.075&	0.925\\
-	Russell Westbrook& 0&	0.136&	0.864&	0&	0.094&	0.906\\
+	Giannis Antetokounmpo&   0&	0.124&	0.876&	0&	0.014&	0.986\\
+	Anthony Davis&   0.062&	0.078&	0.861&	0&	0.071&	0.929\\
+	LeBron James &0&	0.082&	0.918&	0&	0.075&	0.925\\
+	Joel Embiid& 0& 0.171&	0.829&	0&	0.094&	0.906\\
+	Russell Westbrook& 0&	0.136&	0.864&	0&	0.098&	0.902\\
 	Kevin Durant&   0.046&	0.420&	0.534&	0&	0.039&	0.961\\
 	Stephen Curry& 0.050&	0.527&	0.423&	0&	0.061&	0.939\\
 	James Harden&  0&	0.184&	0.816&	0&	0&	1\\
@@ -449,11 +452,11 @@ We have fit a Hidden Markov Model on player level data for the NBA seasons 2017-
 	\hline
 	Player Name & Cold Cold & Cold Hot &Hot Cold & Hot Hot\\
 	\hline
-	Wesley Johnson&   0.799 &	0.201 &	1 &	0.900\\
-	Alex Abrines&   0.574&	0.427&	1&	1\\
-	Solomon Hill &0.846&	0.154&	1&	0.900\\
-	Wilson Chandler&   0.359&	1&	0.356&	0.851\\
-	Skal Labissiere& 0.648&	0.352&	0.852&	0.817\\
+	Wesley Johnson&   0.799 &	0.201 &	1 &	0\\
+	Alex Abrines&   0.574&	0.426&	1&	0\\
+	Solomon Hill &0.846&	0.154&	1&	0\\
+	Wilson Chandler&   0.641&	0.359&	1&	0\\
+	Skal Labissiere& 0.648&	0.352&	0.852&	0.149\\
 	\hline
 \end{tabular}
 
@@ -467,7 +470,7 @@ We have fit a Hidden Markov Model on player level data for the NBA seasons 2017-
 	Alex Abrines&    1&	    0&    	0&  0.363&	0.318&	0.318\\
 	Solomon Hill&    0.899&	0.101&	0&  0.006&	0.821&	0.173\\
 	Wilson Chandler& 0.851& 0.149&	0&	0.008&	0.733&	0.260\\
-	Skal Labissiere& 0.817&	0.012&	0.164&0.006&0.994&	0\\
+	Skal Labissiere& 0.817&	0.019&	0.164&0.006&0.994&	0\\
 	\hline
 \end{tabular}
 
