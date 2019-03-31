@@ -1,0 +1,14 @@
+\begin{thebibliography}{xx}
+
+\harvarditem[Gilovich et~al.]{Gilovich, Vallone \harvardand\
+  Tversky}{1985}{gilovich1985hot}
+Gilovich, T., Vallone, R. \harvardand\ Tversky, A.  \harvardyearleft
+  1985\harvardyearright , `The hot hand in basketball: On the misperception of
+  random sequences', {\em Cognitive psychology} {\bf 17}(3),~295--314.
+
+\harvarditem{Rabiner}{1989}{rabiner1989tutorial}
+Rabiner, L.~R.  \harvardyearleft 1989\harvardyearright , `A tutorial on hidden
+  markov models and selected applications in speech recognition', {\em
+  Proceedings of the IEEE} {\bf 77}(2),~257--286.
+
+\end{thebibliography}
